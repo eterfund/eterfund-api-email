@@ -1,0 +1,73 @@
+body {
+	margin: 0;
+	padding: 0;
+}
+
+.svcCheckEmail.bg-true {
+	background: white url("svcCheckEmail_true.png") right no-repeat;
+}
+
+.svcCheckEmail.bg-false {
+	background: white url("svcCheckEmail_false.png") right no-repeat;
+}
+
+.svcCheckEmail.bg-loader {
+	background: white url("svcCheckEmail_loader.gif") right no-repeat;
+}
+
+#svcCheckEmail_notice {
+    width: 100%;
+    height: 51px;
+    top: 0;
+    position: fixed;
+    z-index: 999999;
+    margin: 0;
+    margin-top: -51px;
+    padding: 0;
+}
+
+#svcCheckEmail_notice.red {
+    background: url('svcCheckEmail_noticeBg_red.png') 0 0 repeat-x;
+    color: #a20510;
+}
+
+#svcCheckEmail_notice.green {
+    background: url('svcCheckEmail_noticeBg_green.png') 0 0 repeat-x;
+    color: #2f7c00;
+}
+
+#svcCheckEmail_notice.yellow {
+    background: url('svcCheckEmail_noticeBg_yellow.png') 0 0 repeat-x;
+    color: #a39709;
+}
+
+#svcCheckEmail_notice .notice_center_auto {
+    margin: 0 auto;
+    width: 900px;
+    padding: 15px 25px;
+}
+
+#svcCheckEmail_notice .notice_center_auto #notice_text {
+	float:left;
+    font: normal 14px arial;
+}
+
+#svcCheckEmail_notice .notice_center_auto #notice_close_btn.red {
+    background: url('svcCheckEmail_closeBtn_red.png') 0 0 no-repeat;    
+}
+
+#svcCheckEmail_notice .notice_center_auto #notice_close_btn.green {
+    background: url('svcCheckEmail_closeBtn_green.png') 0 0 no-repeat;    
+}
+
+#svcCheckEmail_notice .notice_center_auto #notice_close_btn.yellow {
+    background: url('svcCheckEmail_closeBtn_yellow.png') 0 0 no-repeat;    
+}
+
+#svcCheckEmail_notice .notice_center_auto #notice_close_btn { 
+    cursor: pointer;
+    float: right;
+    width: 11px;
+    height: 10px;
+    margin-top: 3px;
+}
