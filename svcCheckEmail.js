@@ -41,13 +41,38 @@ function showNotice(type, message) {
 		emailNotice.animate({ marginTop: '+=51px' }, 300);
 		noticeShow = true;
 	}
-	
+	/* Настраиваем скрытие через N секунд */
 	clearTimeout(noticeTimer);
 	noticeTimer = setTimeout(function() {
 		emailNotice.animate({ marginTop: '-=51px' }, 300);
 		noticeShow = false;
-	}, 3000);
+	}, 7000);
 }
+
+function showErrorNotice(error)
+{
+	var noticeText;
+	switch (error) {
+		case 'dns_records_not_found':
+			noticeText = 'Проверьте e-mail, такой домен не обнаружен.';
+			break;
+		case 'typed_domain':
+			noticeText = 'Обнаружена опечатка в домене. Проверьте внимательно указанный вами e-mail.';
+			break;
+		case 'wrong_email_format':
+			noticeText = 'Что-то не так в написании адреса. Возможно, указаны лишние точки или пробелы.<br>Адрес должен иметь вид: <b>имя_пользователя@имя_домена</b> (например <b>somebody@example.com</b>)';
+			break;
+		// FIXME
+		case 'check':
+			noticeText = 'Идёт проверка адреса e-mail, это может занять несколько секунд.';
+		default:
+		// FIXME
+			noticeText = 'Введённый вами адрес недоступен. Пожалуйста, укажите корректный e-mail.';
+			break;
+	}
+	showNotice('red', noticeText);
+}
+
 
 // Добавляем CSS и расставляем вызов
 $(function() {
@@ -63,24 +88,23 @@ $(function() {
 	
 	emailForm.submit(function() {
 		if(getEMail() == '') {
-			return true;
+			return false;
 		}
-		
+		// FIXME
 		if(checkDoneStatus == 'empty') {
 			emailInput.blur();
 		}
 		
 		if(checkDoneStatus != 'done') {
-			if(checkDoneStatus == 'fail') {
-				showNotice('red', 'Введённый вами адрес недоступен. Пожалуйста, укажите корректный e-mail.');
-			}
-			
-			return false;
+			showErrorNotice(checkDoneStatus);
 		}
 		
-		closeNotice();
-		
-		return true;
+		if(checkDoneStatus == 'done') {
+			closeNotice();
+			return true;
+		}
+		/* forbid send */
+		return false;
 	});
 	
 	emailInput.blur(function() {
@@ -111,20 +135,21 @@ $(function() {
 		inputHeight = parseInt(emailInput.height()) + parseInt(emailInput.css('margin-top')) + parseInt(emailInput.css('margin-bottom'));
 		
 		showNotice('yellow', 'Идёт проверка адреса e-mail, это может занять несколько секунд.');
-		
 		checkDoneStatus = 'check';
+
 		emailInput.removeClass('bg-true').removeClass('bg-false').addClass('bg-loader');
 		
 		clearTimeout(noticeTimer);
 		
+		// Проверяем без отправки на сервер
 		if(email.length < 5 || !regex.test(email)) {
-			showNotice('red', 'Неверный формат email. Адрес должен иметь вид: <b>имя_пользователя@имя_домена</b> (например <b>somebody@example.com</b>)');
+			checkDoneStatus = 'wrong_email_format';
+			showErrorNotice(checkDoneStatus);
 			emailInput.removeClass('bg-loader').addClass('bg-false');
-			checkDoneStatus = 'fail';
-			
 			return false;
 		}
 		
+		// Проверяем на сервере
 		$.ajax({
 			url: '//eterfund.ru/api/email/svcCheckEmail.php',
 			type: 'GET',
@@ -134,6 +159,7 @@ $(function() {
 			error: function() {
 				showNotice('red', 'Ошибка связи с сервером, проверка адреса не удалась.');
 				emailInput.removeClass('bg-loader').addClass('bg-true');
+// FIXME
 				
 				checkDoneStatus = 'true';
 			},
@@ -142,31 +168,24 @@ $(function() {
 				response = JSON.parse(response);
 				
 				if(response.status === false) {
-					switch (response.error) {
-						case 'dns_records_not_found':
-							noticeText = 'Проверьте e-mail, такой домен не обнаружен.';
-							break;
-						case 'typed_domain':
-							noticeText = 'Обнаружена опечатка в домене. Проверьте внимательно указанный вами e-mail.';
-							break;
-						case 'wrong_email_format':
-							noticeText = 'Что-то не так в написании адреса. Возможно, указаны лишние точки или пробелы.';
-							break;
-						default:
-							noticeText = 'Введённый вами адрес недоступен. Пожалуйста, укажите корректный e-mail.';
-							break;
-					}
-					showNotice('red', noticeText);
+					showErrorNotice(response.error);
 					emailInput.removeClass('bg-loader').addClass('bg-false');
 					
-					checkDoneStatus = 'fail';
+					checkDoneStatus = response.error;
 				}
 				else {
 					showNotice('green', 'Email адрес указан верно.');
 					emailInput.removeClass('bg-loader').addClass('bg-true');
 					document.CheckEmailHash = response.hash;
+
+					/* emailhash hidden field support */
+					els = document.getElementsByName('emailhash');
+					if (els.length)
+						els[0].value = response.hash;
+
 					checkDoneStatus = 'done';
 				}
+// FIXME
     } catch (e) {
 		showNotice('yellow', 'Не удалось проверить адрес e-mail.');
 		emailInput.removeClass('bg-loader').addClass('bg-true');
