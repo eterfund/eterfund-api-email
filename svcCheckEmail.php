@@ -7,7 +7,7 @@ error_reporting(0);
 
 function typeddomain($domain)
 {
-    $blacklist = array("meil.ru", "maile.ru", "meil.ru","wail.ru","maiil.ru","maij.ru","mfil.ru","yandeks.ru","yandexs.ru","jandex.ru","yahdex.ru","yanbex.ru","ayndex.ru","yndex.ru","yanddex.ru","gmal.com","gmeil.com","gmauil.com","rabler.ru","ramdler.ru","ranbler.ru","gmail.ru","gmal.com");
+    $blacklist = array("lnbox.ru", "meil.ru", "maile.ru", "meil.ru","wail.ru","maiil.ru","maij.ru","mfil.ru","yandeks.ru","yandexs.ru","jandex.ru","yahdex.ru","yanbex.ru","ayndex.ru","yndex.ru","yanddex.ru","gmal.com","gmal.ru","gmeil.com","gmauil.com","rabler.ru","ramdler.ru","ranbler.ru","gmail.ru","gmal.com");
     return in_array($domain, $blacklist);
 }
 
