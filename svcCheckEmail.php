@@ -56,7 +56,8 @@ function get_client_ip() {
 
 function calc_hash($domain, $ip, $email)
 {
-	return md5($domain.$ip.$email);
+	$net = preg_replace( '_(\d+)\.(\d+)\.(\d+)\.(\d+)$_', '$1.$2.$3', $ip );
+	return md5($domain.$net.$email);
 }
 
 $email = isset($argv[1]) ? $argv[1] : $_GET['email'];
