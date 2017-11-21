@@ -2,12 +2,22 @@
 
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Headers: X-Requested-With, Content-Type');
+header('Access-Control-Allow-Methods: GET, POST');
+header('Access-Control-Allow-Headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range');
+header('Access-Control-Expose-Headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range');
+
 
 error_reporting(0);
 
 function typeddomain($domain)
 {
-    $blacklist = array("lnbox.ru", "meil.ru", "maile.ru", "meil.ru","wail.ru","maiil.ru","maij.ru","mfil.ru","yandeks.ru","yandexs.ru","jandex.ru","yahdex.ru","yanbex.ru","ayndex.ru","yndex.ru","yanddex.ru","gmal.com","gmal.ru","gmeil.com","gmauil.com","rabler.ru","ramdler.ru","ranbler.ru","gmail.ru","gmal.com");
+    // TODO: русские буквы в любом виде
+    // I know, yadex.ru and mail.com are exists, but we will ban it
+    // TODO: тут мы вполне можем предложить автоисправление
+    $blacklist = array("lnbox.ru", "indox.ru", "meil.ru", "maile.ru", "meil.ru","mali.ru", "wail.ru","maiil.ru","maij.ru","mfil.ru","mai.ru","qmail.com","mal.ru","vail.ru",
+                       "yandeks.ru","yandexs.ru","jandex.ru","yahdex.ru","yanbex.ru","ayndex.ru","yndex.ru","yanddex.ru","yamdex.ru","yundex.ru","eandex.ru","yadex.ru",
+                       "gmal.com","gmal.ru","gmeil.com","gmauil.com","gmail.ru","gmal.com","dmail.com", "mail.com",
+                       "rabler.ru","ramdler.ru","ranbler.ru");
     return in_array($domain, $blacklist);
 }
 
