@@ -242,7 +242,7 @@
 				// после чего сабмитнем форму, если всё хорошо
 				checkEmailFull(email, function (result) {
 					if (result) {
-						emailForm.submit();
+						emailForm[0] && emailForm[0].submit();
 					}
 				});
 				return false;
