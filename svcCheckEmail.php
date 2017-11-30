@@ -9,8 +9,7 @@ header('Access-Control-Expose-Headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,
 
 error_reporting(0);
 
-function typeddomain($domain)
-{
+function typeddomain($domain) {
     // TODO: русские буквы в любом виде
     // I know, yadex.ru and mail.com are exists, but we will ban it
     // TODO: тут мы вполне можем предложить автоисправление
@@ -76,8 +75,10 @@ $site_domain = parse_url($http_referer, PHP_URL_HOST);
 $ip_from = get_client_ip();
 
 // TODO: improve domain list? drop it?
-if(mb_strlen($email, 'utf8') > 5 && 
-	preg_match('/^([^@\s]+)@(([a-zA-Z0-9\_\-]+\.)+([a-zA-Z]{2}|aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|post|pro|tel|travel))$/', $email, $matches)) {
+if(
+	mb_strlen($email, 'utf8') > 5 && 
+	preg_match('/^([^@\s]+)@(([a-zA-Z0-9\_\-]+\.)+([a-zA-Z]{2}|aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|post|pro|tel|travel))$/', $email, $matches)
+) {
 
 	$response = array(
 		'email' => $matches[0],
@@ -89,10 +90,10 @@ if(mb_strlen($email, 'utf8') > 5 &&
 		'error' => null
 	);
 
-if(typeddomain($matches[2])) {
-	$response['status'] = false;
-	$response['error'] = 'typed_domain';
-}
+	if(typeddomain($matches[2])) {
+		$response['status'] = false;
+		$response['error'] = 'typed_domain';
+	}
 
 	if(checkdnsrr($matches[2]) === false) {
 		$response['status'] = false;
@@ -115,8 +116,7 @@ if(typeddomain($matches[2])) {
 		PHP_EOL;
 	
 	file_put_contents(dirname(__FILE__).'/logs/'.$referer_host.'.'.($response['status'] ? 'ok' : 'error').'.log', $data, FILE_APPEND);
-}
-else {
+} else {
 	$response = array(
 		'email' => $email,
 		'username' => null,
