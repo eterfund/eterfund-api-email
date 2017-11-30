@@ -100,6 +100,12 @@ if(
 		$response['error'] = 'dns_records_not_found';
 	}
 
+	// Встроенная в PHP проверка
+	if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		$response['status'] = false;
+		$response['error'] = 'wrong_email_format';
+	}
+
 	// TODO: Referer: http://translate.googleusercontent.com/translate_c?depth=1&rurl=translate.google.com&sl=ru&tl=ar&u=http://azbyka.ru/znakomstva/
 	$referer = $http_referer ? $http_referer : 'Unknown';
 	$referer_host = $http_referer ? str_ireplace('www.', '', parse_url($referer, PHP_URL_HOST)) : 'unknown_host';
