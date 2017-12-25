@@ -156,7 +156,7 @@
 
 	function setStatus (_status, message) {
 		if (_status === STATUS_NONE) {
-			hideNotice();
+			clearNotice();
 		} else {
 			var noticeType, fieldType;
 			switch (_status) {
