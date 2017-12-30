@@ -156,7 +156,7 @@
 
 	function setStatus (_status, message) {
 		if (_status === STATUS_NONE) {
-			clearNotice();
+			closeNotice();
 		} else {
 			var noticeType, fieldType;
 			switch (_status) {
