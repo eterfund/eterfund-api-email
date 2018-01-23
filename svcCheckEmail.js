@@ -23,7 +23,7 @@
 			FIELD_SUCCESS = 'bg-true',
 			FIELD_INVALID = 'bg-false';
 
-	var EMAIL_REGEX = /^([^@\s]+)@(([a-zA-Z0-9\_\-]+\.)+([a-zA-Z]{2}|aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|post|pro|tel|travel|xxx))$/;
+	var EMAIL_REGEX = /^([^@\s]+)@(([a-zA-Z0-9\_\-]+\.)+([a-zA-Z]{2}|aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|post|pro|tel|travel|xxx|events))$/;
 
 	// TODO: избавиться от глобального состояния, лучше для каждой
 	// формы иметь свой набор таких полей
@@ -189,12 +189,13 @@
 
 			emailNotice = $(notice);
 			$('body').prepend(emailNotice);
+			$('#notice_close_btn').click(closeNotice);
 		}
 		
 		$('#notice_text').html(message);
 		
 		emailNotice.removeClass().addClass(type);
-		$('#notice_close_btn').removeClass().addClass(type).click(closeNotice);
+		$('#notice_close_btn').removeClass().addClass(type);
 
 		lastNoticeType = type;
 		lastNoticeMessage = message;
@@ -230,31 +231,57 @@
 		modifyField = !emailInput.hasClass('svcCheckEmail-nostyle');
 		var emailNotice, emailForm = emailInput.closest('form');
 		
-		emailForm.submit(function() {
+		if (!emailForm.hasClass('manual')) {
+			emailForm.submit(function() {
+				var email = getEMail();
+				if (email === '') {
+					setStatus(STATUS_ERROR, getErrorMessage(ERROR_EMPTY));
+					return false;
+				}
+
+				if (status === STATUS_NONE) {
+					// Если в момент сабмита проверка не выполнялась - выполним её,
+					// после чего сабмитнем форму, если всё хорошо
+					checkEmailFull(email, function (result) {
+						if (result) {
+							emailForm[0] && emailForm[0].submit();
+						}
+					});
+					return false;
+				}
+
+				if (status !== STATUS_SUCCESS) {
+					showSameNotice();
+					return false;
+				}
+				
+				return true;
+			});
+		}
+
+		window.checkEmail = function(callback) {
 			var email = getEMail();
 			if (email === '') {
 				setStatus(STATUS_ERROR, getErrorMessage(ERROR_EMPTY));
-				return false;
+				callback(false);
+				return;
 			}
 
 			if (status === STATUS_NONE) {
-				// Если в момент сабмита проверка не выполнялась - выполним её,
-				// после чего сабмитнем форму, если всё хорошо
 				checkEmailFull(email, function (result) {
-					if (result) {
-						emailForm[0] && emailForm[0].submit();
-					}
+					callback(result);
 				});
-				return false;
+				return;
 			}
 
 			if (status !== STATUS_SUCCESS) {
 				showSameNotice();
-				return false;
+				callback(false);
+				return;
 			}
-			
-			return true;
-		});
+
+			callback(true);
+		};
 		
 		emailInput.blur(function () {
 			var email = getEMail();
