@@ -267,20 +267,9 @@
 				return;
 			}
 
-			if (status === STATUS_NONE) {
-				checkEmailFull(email, function (result) {
-					callback(result);
-				});
-				return;
-			}
-
-			if (status !== STATUS_SUCCESS) {
-				showSameNotice();
-				callback(false);
-				return;
-			}
-
-			callback(true);
+			checkEmailFull(email, function (result) {
+				callback(result);
+			});
 		};
 		
 		emailInput.blur(function () {
