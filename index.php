@@ -15,7 +15,7 @@
 </html>
 <body>
 	<form action="" method="post">
-		E-mail: <input type="text" name="email" value="<?php echo $_POST['email']; ?>" class="svcCheckEmail" />
+		E-mail: <input type="text" name="email" value="<?php if (isset($_POST['email'])) echo $_POST['email']; ?>" class="svcCheckEmail" />
 		<input type="submit" value="Отправить" />
 	</form>
 </body>

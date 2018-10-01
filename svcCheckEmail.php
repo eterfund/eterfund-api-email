@@ -14,7 +14,7 @@ function typeddomain($domain) {
     // I know, yadex.ru and mail.com are exists, but we will ban it
     // TODO: тут мы вполне можем предложить автоисправление
     $blacklist = array("lnbox.ru", "indox.ru", "meil.ru", "maile.ru", "meil.ru","mali.ru", "wail.ru","maiil.ru","maij.ru","mfil.ru","mai.ru","qmail.com","mal.ru","vail.ru",
-                       "yandeks.ru","yandexs.ru","jandex.ru","yahdex.ru","yanbex.ru","ayndex.ru","yndex.ru","yanddex.ru","yamdex.ru","yundex.ru","eandex.ru","yadex.ru",
+                       "yandeks.ru","yandexs.ru","jandex.ru","yahdex.ru","yanbex.ru","ayndex.ru","yndex.ru","yanddex.ru","yamdex.ru","yundex.ru","eandex.ru","yadex.ru","yandes.ru",
                        "gmal.com","gmal.ru","gmeil.com","gmauil.com","gmail.ru","gmal.com","dmail.com", "mail.com",
                        "rabler.ru","ramdler.ru","ranbler.ru");
     return in_array($domain, $blacklist);
@@ -77,7 +77,7 @@ $ip_from = get_client_ip();
 // TODO: improve domain list? drop it?
 if(
 	mb_strlen($email, 'utf8') > 5 && 
-	preg_match('/^([^@\s]+)@(([a-zA-Z0-9\_\-]+\.)+([a-zA-Z]{2}|aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|post|pro|tel|travel))$/', $email, $matches)
+	preg_match('/^([^@\s]+)@(([a-zA-Z0-9\_\-]+\.)+([a-zA-Z]{2}|aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|post|pro|tel|travel|events))$/', $email, $matches)
 ) {
 
 	$response = array(
