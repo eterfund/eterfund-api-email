@@ -1,4 +1,6 @@
 (function() {
+	var $ = window.jQuery || window.$;
+
 	// Возможные состояния:
 	var STATUS_ERROR = 1,   // ошибка при запросе/разборе ответа
 			STATUS_INVALID = 2, // email некорректный
