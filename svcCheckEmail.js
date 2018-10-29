@@ -33,6 +33,7 @@
 	var lastNoticeType, lastNoticeMessage;
 	// Изменять ли стили самого поля
 	var modifyField;
+	var onSubmit = [];
 	
 	// Проверяем сначала локально, потом на сервере, выставляем статус проверки
 	// Опционально - можно передать callback, принимающий результат (true/false)
@@ -40,6 +41,10 @@
 		var _callback = function (result) {
 			if (callback) {
 				callback(result);
+				onSubmit.forEach(function (callback) {
+					callback(result);
+				});
+				onSubmit = [];
 			}
 		};
 
@@ -241,9 +246,9 @@
 					return false;
 				}
 
-				if (status === STATUS_NONE) {
-					// Если в момент сабмита проверка не выполнялась - выполним её,
-					// после чего сабмитнем форму, если всё хорошо
+				if (status === STATUS_NONE || status === STATUS_LOADING) {
+					// Если в момент сабмита проверка не выполнялась или же выполняется другая
+					// выполним новую проверку, после чего сабмитнем форму, если всё хорошо
 					checkEmailFull(email, function (result) {
 						if (result) {
 							emailForm[0] && emailForm[0].submit();
