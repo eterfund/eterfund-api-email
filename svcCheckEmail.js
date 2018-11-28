@@ -25,7 +25,9 @@
 			FIELD_SUCCESS = 'bg-true',
 			FIELD_INVALID = 'bg-false';
 
-	var EMAIL_REGEX = /^([^@\s]+)@(([a-zA-Z0-9\_\-]+\.)+([a-zA-Z]{2}|aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|post|pro|tel|travel|xxx|events))$/;
+	// TODO: нужно поосторожнее с проверкой
+	//var EMAIL_REGEX = /^([^@\s]+)@(([a-zA-Z0-9\_\-]+\.)+([a-zA-Z]{2}|aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|post|pro|tel|travel|xxx|events|space))$/;
+	var EMAIL_REGEX = /^([^@\s]+)@(([a-zA-Z0-9\_\-]+\.)+([a-zA-Z]{2,10}))$/;
 
 	// TODO: избавиться от глобального состояния, лучше для каждой
 	// формы иметь свой набор таких полей
