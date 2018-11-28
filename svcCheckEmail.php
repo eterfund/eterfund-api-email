@@ -106,7 +106,7 @@ if( !validate_email($email, $matches) ) {
 		'username' => $matches[1],
 		'domain' => $matches[2],
 		'ip_from' => $ip_from,
-		'hash'    => calc_hash($site_domain, $ip_from, $matches[0]),
+		'hash'    => null,
 		'status' => true,
 		'error' => null
 	);
@@ -130,7 +130,10 @@ if( !validate_email($email, $matches) ) {
 	// TODO: Referer: http://translate.googleusercontent.com/translate_c?depth=1&rurl=translate.google.com&sl=ru&tl=ar&u=http://azbyka.ru/znakomstva/
 	$referer = $http_referer ? $http_referer : 'Unknown';
 	$referer_host = $http_referer ? str_ireplace('www.', '', parse_url($referer, PHP_URL_HOST)) : 'unknown_host';
-	
+
+	if ($response['status'] === true)
+		$response['hash' ] = calc_hash($site_domain, $ip_from, $matches[0]);
+
 	$data = 'Date: '.date('d/m/Y H:i:s').
 		' | IP: '.$ip_from.
 		' | Referer: '.$referer.
