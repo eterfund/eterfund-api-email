@@ -116,7 +116,8 @@ if( !validate_email($email, $matches) ) {
 		$response['error'] = 'typed_domain';
 	}
 
-	if(checkdnsrr($matches[2]) === false) {
+	// TODO: проверять отдельно на существование домена
+	if(checkdnsrr($matches[2], "MX") === false) {
 		$response['status'] = false;
 		$response['error'] = 'dns_records_not_found';
 	}
