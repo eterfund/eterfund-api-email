@@ -69,16 +69,37 @@ function calc_hash($domain, $ip, $email)
 	return md5($domain.$net.$email);
 }
 
+// TODO: improve domain list? drop it?
+function validate_email($email, &$matches)
+{
+	if ( mb_strlen($email, 'utf8') <= 5 )
+		return false;
+	//return preg_match('/^([^@\s]+)@(([a-zA-Z0-9\_\-]+\.)+([a-zA-Z]{2}|aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|post|pro|tel|travel|events|space))$/', $email, $matches);
+	return preg_match('/^([^@\s]+)@(([a-zA-Z0-9\_\-]+\.)+([a-zA-Z]{2,10}))$/', $email, $matches);
+}
+
 $email = isset($argv[1]) ? $argv[1] : $_GET['email'];
 $http_referer = $_SERVER['HTTP_REFERER'];
 $site_domain = parse_url($http_referer, PHP_URL_HOST);
 $ip_from = get_client_ip();
 
-// TODO: improve domain list? drop it?
-if(
-	mb_strlen($email, 'utf8') > 5 && 
-	preg_match('/^([^@\s]+)@(([a-zA-Z0-9\_\-]+\.)+([a-zA-Z]{2}|aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|post|pro|tel|travel|events))$/', $email, $matches)
-) {
+
+
+if( !validate_email($email, $matches) ) {
+	$response = array(
+		'email' => $email,
+		'username' => null,
+		'domain' => null,
+		'ip_from' => $ip_from,
+		'hash'	=> null,
+		'status' => false,
+		'error' => 'wrong_email_format'
+	);
+	echo json_encode($response);
+	// Failed to load resource: the server responded with a status of 406 (Not Acceptable)
+	// http_response_code(406); // 406 Not Acceptable («неприемлемо»
+	exit(1);
+}
 
 	$response = array(
 		'email' => $matches[0],
@@ -122,18 +143,6 @@ if(
 		PHP_EOL;
 	
 	file_put_contents(dirname(__FILE__).'/logs/'.$referer_host.'.'.($response['status'] ? 'ok' : 'error').'.log', $data, FILE_APPEND);
-} else {
-	$response = array(
-		'email' => $email,
-		'username' => null,
-		'domain' => null,
-		'ip_from' => $ip_from,
-		'hash'	=> null,
-		'status' => false,
-		'error' => 'wrong_email_format'
-	);
-}
 
-echo json_encode($response);
+	echo json_encode($response);
 
-?>
